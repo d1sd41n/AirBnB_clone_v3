@@ -29,47 +29,51 @@ def get_city(city_id):
     return jsonify(city_.to_dict())
 
 
+@app_views.route('/cities/<city_id>', methods=['DELETE'], strict_slashes=False)
+def delete_city(city_id):
+    """delete city by id."""
+    query = storage.all(City)
+    if "City.{}".format(city_id) not in query:
+        abort(404)
+    storage.delete(query["City.{}".format(city_id)])
+    storage.save()
+    return jsonify({})
 
 
+@app_views.route('/states/<state_id>/cities', methods=['POST'], strict_slashes=False)
+def post_city(state_id):
+    """create a city in state by state id."""
 
-
-
-@app_views.route('/tates', methods=['POST'], strict_slashes=False)
-def post_tate():
-    """save a state"""
     query = request.get_json()
     if query is None:
         abort(400, 'Not a JSON')
     if "name" not in query.keys():
         abort(400, 'Missing name')
-    state = State(**query)
-    state.save()
-    return (jsonify(state.to_dict()), 201)
 
-@app_views.route('/tates/<state_id>', methods=['DELETE'], strict_slashes=False)
-def delete_tate(state_id):
-    """delete state"""
-    query = storage.all(State)
-    if "State.{}".format(state_id) not in query:
+    query2 = storage.all(State)
+    if "State.{}".format(state_id) not in query2:
         abort(404)
-    storage.delete(query["State.{}".format(state_id)])
-    storage.save()
-    return jsonify({})
 
-@app_views.route('/tates/<state_id>', methods=['PUT'],strict_slashes=False)
-def put_tate(state_id):
-    """update state"""
-    query = storage.all(State)
-    if "State.{}".format(state_id) not in query:
+    query["state_id"] = state_id
+    city = City(**query)
+    city.save()
+    return (jsonify(city.to_dict()), 201)
+
+
+@app_views.route('/cities/<city_id>', methods=['PUT'],strict_slashes=False)
+def put_city(city_id):
+    """update city."""
+    query = storage.all(City)
+    if "City.{}".format(city_id) not in query:
         abort(404)
-    state = storage.get('State', state_id)
-    if state is None:
+    city = storage.get('City', city_id)
+    if city is None:
         abort(404)
     if not request.json:
         abort(400, 'Not a JSON')
     for i in request.json:
         if i not in ['id', 'created_at', 'updated_at']:
-            setattr(state, i, request.json[i])
-    state.save()
-    return jsonify(state.to_dict())
+            setattr(city, i, request.json[i])
+    city.save()
+    return jsonify(city.to_dict())
 
