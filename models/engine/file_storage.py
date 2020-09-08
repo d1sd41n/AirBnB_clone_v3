@@ -74,3 +74,8 @@ class FileStorage:
         query = self.all(cls)
         return len(query)
 
+    def get(self, cls, id):
+        """get an item"""
+        query = self.all(cls)
+        return query.get(cls + '.' + id)
+
