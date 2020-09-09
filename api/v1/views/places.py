@@ -32,7 +32,7 @@ def get_place(place_id):
 @app_views.route('/places/<place_id>', methods=['DELETE'], strict_slashes=False)
 def delete_place(place_id):
     """delete city by id."""
-    query = storage.all('Place')
+    query = storage.all(Place)
     if "Place.{}".format(place_id) not in query:
         abort(404)
     storage.delete(query["Place.{}".format(place_id)])
@@ -51,7 +51,7 @@ def post_place(city_id):
         abort(400, 'Missing name')
 
     query2 = storage.all(City)
-    if "State.{}".format(city_id) not in query2:
+    if "Place.{}".format(city_id) not in query2:
         abort(404)
 
     query["city_id"] = city_id
