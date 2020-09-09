@@ -6,6 +6,7 @@ from flask import jsonify
 from models import storage
 from models.place import Place
 from models.city import City
+from models.user import User
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
@@ -53,9 +54,17 @@ def post_place(city_id):
         abort(400, 'Not a JSON')
     if "name" not in query.keys():
         abort(400, 'Missing name')
+    if "user_id" not in query.keys():
+        abort(400, 'Missing user_id')
+
+    user_id = query['user_id']
 
     query2 = storage.all(City)
     if "Place.{}".format(city_id) not in query2:
+        abort(404)
+
+    query3 = storage.all(User)
+    if "User.{}".format(user_id) not in query3:
         abort(404)
 
     query["city_id"] = city_id
