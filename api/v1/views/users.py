@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """Api States """
 from flask import Flask, request, abort
 from api.v1.views import app_views
