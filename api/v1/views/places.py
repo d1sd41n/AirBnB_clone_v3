@@ -8,13 +8,15 @@ from models.place import Place
 from models.city import City
 
 
-@app_views.route('/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
+@app_views.route('/cities/<city_id>/places', methods=['GET'],
+                 strict_slashes=False)
 def get_places_by_cities(city_id):
     """get places by city id."""
     query = storage.all(City)
     if "City.{}".format(city_id) not in query:
         abort(404)
-    return jsonify([place.to_dict() for place in storage.get('City', city_id).places])
+    return jsonify([place.to_dict() for place in
+                   storage.get('City', city_id).places])
 
 
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
@@ -29,7 +31,8 @@ def get_place(place_id):
     return jsonify(place_.to_dict())
 
 
-@app_views.route('/places/<place_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/places/<place_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def delete_place(place_id):
     """delete city by id."""
     query = storage.all(Place)
@@ -40,7 +43,8 @@ def delete_place(place_id):
     return jsonify({})
 
 
-@app_views.route('/cities/<city_id>/places', methods=['POST'], strict_slashes=False)
+@app_views.route('/cities/<city_id>/places', methods=['POST'],
+                 strict_slashes=False)
 def post_place(city_id):
     """create a city in state by state id."""
 
@@ -60,7 +64,7 @@ def post_place(city_id):
     return (jsonify(place.to_dict()), 201)
 
 
-@app_views.route('/places/<place_id>', methods=['PUT'],strict_slashes=False)
+@app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def put_place(place_id):
     """update city."""
     query = storage.all(Place)
@@ -76,4 +80,3 @@ def put_place(place_id):
             setattr(place, i, request.json[i])
     place.save()
     return jsonify(place.to_dict())
-
