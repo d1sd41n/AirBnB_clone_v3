@@ -113,3 +113,47 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_reload(self):
+        """ Check the method reload"""
+        fil_1 = FileStorage()
+        try:
+            os.remove("file.json")
+        except:
+            pass
+        FileStorage._FileStorage__objects = {}
+        base4 = BaseModel()
+        key_id = type(base4).__name__ + "." + base4.id
+        base4.save()
+        fil_1.reload()
+        self.assertEqual(type(FileStorage._FileStorage__objects), dict)
+        self.assertEqual(type(FileStorage._FileStorage__objects[key_id]),
+                         BaseModel)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count(self):
+        """Check count() method"""
+        query = FileStorage()
+        bas = BaseModel()
+        dictionary = query.all()
+        bas.save()
+        size1 = len(dictionary)
+        bas2 = BaseModel()
+        dictionary = query.all()
+        bas2.save()
+        size2 = len(dictionary)
+        self.assertTrue(size2 > size1)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """Check get() method"""
+        query = FileStorage()
+        stat1 = State()
+        stat2 = State()
+        stat1.save()
+        stat2.save()
+        obj_id = list(query.all(State).values())[0]
+        first_state_id = list(query.all(State).values())[0].id
+        get_value = query.get(State, first_state_id)
+        self.assertTrue(get_value is obj_id)
