@@ -144,6 +144,7 @@ class TestFileStorage(unittest.TestCase):
         bas2.save()
         size2 = len(dictionary)
         self.assertTrue(size2 > size1)
+        self.assertIs(type(models.storage.count()), int)
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_get(self):
@@ -157,3 +158,4 @@ class TestFileStorage(unittest.TestCase):
         first_state_id = list(query.all(State).values())[0].id
         get_value = query.get(State, first_state_id)
         self.assertTrue(get_value is obj_id)
+        self.assertIs(type(models.storage.get()), dict)
