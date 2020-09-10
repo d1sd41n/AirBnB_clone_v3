@@ -21,6 +21,10 @@ def post_user():
         abort(400, 'Not a JSON')
     if "name" not in query.keys():
         abort(400, 'Missing name')
+    if 'email' not in query.keys():
+        abort(400, 'Missing email')
+    if 'password' not in query.keys():
+        abort(400, 'Missing password')
     user = User(**query)
     user.save()
     return (jsonify(user.to_dict()), 201)
