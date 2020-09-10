@@ -57,8 +57,11 @@ def post_review(place_id):
     if "text" not in query.keys():
         abort(400, 'Missing text')
 
-    query3 = storage.all(User)
-    if "User.{}".format(query["user_id"]) not in query3:
+    # query3 = storage.all(User)
+    # if "User.{}".format(query["user_id"]) not in query3:
+    #     abort(404)
+    query3 = storage.get('User', query['user_id'])
+    if query3 is None:
         abort(404)
     query2 = storage.all(Place)
     if "Place.{}".format(place_id) not in query2:
