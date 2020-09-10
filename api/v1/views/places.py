@@ -63,8 +63,8 @@ def post_place(city_id):
     if "Place.{}".format(city_id) not in query2:
         abort(404)
 
-    query3 = storage.all(User)
-    if "User.{}".format(user_id) not in query3:
+    query3 = storage.get('User', query['user_id'])
+    if query3 is None:
         abort(404)
 
     query["city_id"] = city_id
